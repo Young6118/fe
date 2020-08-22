@@ -18,6 +18,7 @@ module.exports = {
               'vue',
               'vue-router',
               'JS',  /* /foo/one.html */
+              '设计模式',
               '函数',
               'html+css',
               '面经',

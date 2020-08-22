@@ -89,4 +89,101 @@ index作为key同样会导致原地复用，错误变更组件。
 
 vue.use ? install
 
+## 组件间通信
 
+* `Props`传递数据 （常用）
+
+> 只能父组件向子组件传递数据
+
+父组件内：
+
+``` vue
+<template>
+    <Son :value="value"/>
+</template>
+
+<script>
+export default {
+    data () {
+        return {
+            value: 2
+        }
+    }
+}
+</script>
+```
+
+
+子组件内写法：
+
+``` vue
+<template>
+    <div>
+        {{ value }}
+    </div>
+</template>
+
+<script>
+export default {
+    props: {
+        value: {
+            type: Number,
+            default: 1
+        }
+    }
+}
+</script>
+```
+
+* `$emit` （组件封装用的较多）
+
+> 子组件向父组件传递数据通过触发事件完成
+
+父组件内：
+
+``` vue
+<template>
+    <Son @change="handleClick"/>
+</template>
+
+<script>
+export default {
+    methods: {
+        handleClick (val) {
+            console.log(val)
+        }
+    }
+}
+</script>
+```
+
+
+子组件内写法：
+
+``` vue
+<template>
+    <div>
+        <button @click="emitChange">点点点</button>
+    </div>
+</template>
+
+<script>
+export default {
+    methods: {
+        emitChange () {
+            this.$emit('change', 666)
+        }
+    }
+}
+</script>
+```
+
+* attrs & listeners
+
+* Provide & Inject
+
+* Ref使用
+* EventBus
+* Vuex通信
+
+<iframe src="https://codesandbox.io/embed/github/vuejs/vuejs.org/tree/master/src/v2/examples/vue-20-markdown-editor?codemirror=1&hidedevtools=1&hidenavigation=1&theme=light" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" title="vue-20-template-compilation" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media; usb" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
