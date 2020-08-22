@@ -22,6 +22,8 @@ module.exports = {
               'html+css',
               '面经',
               '算法',
+              '网络安全',
+              '前端工程化'
             ],
             // fallback
             '/': [

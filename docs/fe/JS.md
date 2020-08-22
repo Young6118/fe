@@ -324,5 +324,16 @@ MyPromise.resolve = (reason) => {
 
 ## ECMAScript 6 ES6
 
-## Module 语法
+## JS模块化、Module 语法
 
+模块
+
+模块是将一个复杂程序依照规范封装成几个文件，并进行组合使用。
+
+模块内部数据和实现是私有的，通过暴露出去接口实现与外部通信。
+
+### 
+
+### CommonJS
+
+Node 服务端使用
