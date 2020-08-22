@@ -1113,6 +1113,13 @@
   dependencies:
     lodash.debounce "^4.0.8"
 
+"@vuepress/plugin-back-to-top@^1.5.3":
+  version "1.5.3"
+  resolved "http://nexus.qutoutiao.net/repository/qtt/@vuepress/plugin-back-to-top/-/plugin-back-to-top-1.5.3.tgz#bb33f86c6c6283159d260ba7feb5ee2d1e008c5d"
+  integrity sha512-ZrEhdYUIu8ywvTIDBztzPF7YO09bWrNX+HSI9BMvF+8XhDt4MG5XRuoVDq8WTN2YZMdFTVSRzWXxlGm9aZ+eGQ==
+  dependencies:
+    lodash.debounce "^4.0.8"
+
 "@vuepress/plugin-last-updated@1.5.3":
   version "1.5.3"
   resolved "http://nexus.qutoutiao.net/repository/qtt/@vuepress/plugin-last-updated/-/plugin-last-updated-1.5.3.tgz#1f2dcc653d3b829d65094433395f9a92642eb301"
@@ -1120,7 +1127,7 @@
   dependencies:
     cross-spawn "^6.0.5"
 
-"@vuepress/plugin-nprogress@1.5.3":
+"@vuepress/plugin-nprogress@1.5.3", "@vuepress/plugin-nprogress@^1.5.3":
   version "1.5.3"
   resolved "http://nexus.qutoutiao.net/repository/qtt/@vuepress/plugin-nprogress/-/plugin-nprogress-1.5.3.tgz#01c699739ecfe94569986ff838665dcb30e6cb05"
   integrity sha512-SBa4uoRBaBPF+TrN38y/eFSnj1c2a53EuyY+vYijrWq5+nmDCQkpoClpS4a90f2eG2shMIvsMxUsS8waMKFZ8w==
@@ -1134,7 +1141,7 @@
   dependencies:
     "@vuepress/shared-utils" "1.5.3"
 
-"@vuepress/plugin-search@1.5.3":
+"@vuepress/plugin-search@1.5.3", "@vuepress/plugin-search@^1.5.3":
   version "1.5.3"
   resolved "http://nexus.qutoutiao.net/repository/qtt/@vuepress/plugin-search/-/plugin-search-1.5.3.tgz#c2a93fceab3830e4f07ba6ac68e3bfc27c7d908d"
   integrity sha512-LCqqgKQ1I26oWE3N5OKeZMV0xtWv2WURI+bhxirM1xL0OpCQyqwk/rLHWBto+j4Y0ScxgXiRxa9Zs2E6eY6Dnw==
