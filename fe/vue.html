@@ -7,7 +7,7 @@
     <meta name="generator" content="VuePress 1.5.3">
     <link rel="icon" href="/fe/logo.jpg">
     <meta name="description" content="周洋的个人网站">
-    <link rel="preload" href="/fe/assets/css/0.styles.7ecbf534.css" as="style"><link rel="preload" href="/fe/assets/js/app.eb6ead6e.js" as="script"><link rel="preload" href="/fe/assets/js/2.656fe59e.js" as="script"><link rel="preload" href="/fe/assets/js/10.0088e856.js" as="script"><link rel="prefetch" href="/fe/assets/js/11.d79e0d14.js"><link rel="prefetch" href="/fe/assets/js/12.794eb835.js"><link rel="prefetch" href="/fe/assets/js/13.248c9ce2.js"><link rel="prefetch" href="/fe/assets/js/14.1ed22186.js"><link rel="prefetch" href="/fe/assets/js/15.7574c66a.js"><link rel="prefetch" href="/fe/assets/js/16.71f45484.js"><link rel="prefetch" href="/fe/assets/js/3.2607c2c3.js"><link rel="prefetch" href="/fe/assets/js/4.25beba5f.js"><link rel="prefetch" href="/fe/assets/js/5.61ac3f31.js"><link rel="prefetch" href="/fe/assets/js/6.b52fd1e3.js"><link rel="prefetch" href="/fe/assets/js/7.22c37380.js"><link rel="prefetch" href="/fe/assets/js/8.c6e7321a.js"><link rel="prefetch" href="/fe/assets/js/9.6c2c9adf.js">
+    <link rel="preload" href="/fe/assets/css/0.styles.7ecbf534.css" as="style"><link rel="preload" href="/fe/assets/js/app.aa80d168.js" as="script"><link rel="preload" href="/fe/assets/js/2.656fe59e.js" as="script"><link rel="preload" href="/fe/assets/js/10.f8eee26d.js" as="script"><link rel="prefetch" href="/fe/assets/js/11.282ecfe9.js"><link rel="prefetch" href="/fe/assets/js/12.30d8ba8d.js"><link rel="prefetch" href="/fe/assets/js/13.edc9b7b8.js"><link rel="prefetch" href="/fe/assets/js/14.8b556d7c.js"><link rel="prefetch" href="/fe/assets/js/15.0abd6b93.js"><link rel="prefetch" href="/fe/assets/js/16.973b4252.js"><link rel="prefetch" href="/fe/assets/js/3.2607c2c3.js"><link rel="prefetch" href="/fe/assets/js/4.25beba5f.js"><link rel="prefetch" href="/fe/assets/js/5.61ac3f31.js"><link rel="prefetch" href="/fe/assets/js/6.01d6ee65.js"><link rel="prefetch" href="/fe/assets/js/7.22c37380.js"><link rel="prefetch" href="/fe/assets/js/8.c6e7321a.js"><link rel="prefetch" href="/fe/assets/js/9.e8edbf4d.js">
     <link rel="stylesheet" href="/fe/assets/css/0.styles.7ecbf534.css">
   </head>
   <body>
@@ -44,14 +44,31 @@
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span>
-</code></pre></div><h3 id="面向对象写法"><a href="#面向对象写法" class="header-anchor">#</a> 面向对象写法</h3> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">class</span> <span class="token class-name">Dep</span> <span class="token punctuation">{</span>
-    <span class="token function">constructor</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>subs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+</code></pre></div><h3 id="面向对象写法"><a href="#面向对象写法" class="header-anchor">#</a> 面向对象写法</h3> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">class</span> <span class="token class-name">Dep</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 根据 ts 类型提示，我们可以得出 Dep.target 是一个 Watcher 类型。</span>
+  <span class="token keyword">static</span> target<span class="token operator">:</span> <span class="token operator">?</span>Watcher<span class="token punctuation">;</span>
+  <span class="token comment">// subs 存放搜集到的 Watcher 对象集合</span>
+  subs<span class="token operator">:</span> Array<span class="token operator">&lt;</span>Watcher<span class="token operator">&gt;</span><span class="token punctuation">;</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>subs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">addSub</span><span class="token punctuation">(</span><span class="token parameter">sub<span class="token operator">:</span> Watcher</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 搜集所有使用到这个 data 的 Watcher 对象。</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>subs<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>sub<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">depend</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>Dep<span class="token punctuation">.</span>target<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 搜集依赖，最终会调用上面的 addSub 方法</span>
+      Dep<span class="token punctuation">.</span>target<span class="token punctuation">.</span><span class="token function">addDep</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-
-    <span class="token function">addSub</span> <span class="token punctuation">(</span><span class="token parameter">sub</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-
+  <span class="token punctuation">}</span>
+  <span class="token function">notify</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> subs <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>subs<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> l <span class="token operator">=</span> subs<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i <span class="token operator">&lt;</span> l<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 调用对应的 Watcher，更新视图</span>
+      subs<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre></div><h2 id="为列表渲染设置属性-key"><a href="#为列表渲染设置属性-key" class="header-anchor">#</a> 为列表渲染设置属性 <code>key</code></h2> <p><code>key</code> 用于<code>Vue.js</code>的虚拟DOM算法中，是给每一个vnode的唯一id,可以依靠key,更准确, 更快的拿到oldVnode中对应的vnode节点。</p> <p>带key的时候，会基于相同的key来进行排列。进入<code>patch</code>流程，并找出可复用的部分节点，删除变更节点，重新创建新节点并插入，产生更多开销；</p> <p>带key还能触发过渡效果，以及触发组件的生命周期。</p> <ol><li><p>更准确
 因为带key就不是就地复用了，在sameNode函数 a.key === b.key对比中可以避免就地复用的情况。所以会更加准确。</p></li> <li><p>更快
@@ -113,11 +130,11 @@
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><ul><li><p>attrs &amp; listeners</p></li> <li><p>Provide &amp; Inject</p></li> <li><p>Ref使用</p></li> <li><p>EventBus</p></li> <li><p>Vuex通信</p></li></ul> <iframe src="https://codesandbox.io/embed/github/vuejs/vuejs.org/tree/master/src/v2/examples/vue-20-markdown-editor?codemirror=1&amp;hidedevtools=1&amp;hidenavigation=1&amp;theme=light" title="vue-20-template-compilation" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media; usb" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" style="width:100%;height:500px;border:0;border-radius:4px;overflow:hidden;"></iframe></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">2020-8-22 23:05:16</span></div></footer> <div class="page-nav"><p class="inner"><!----> <span class="next"><a href="/fe/fe/vue-router.html">
+</code></pre></div><ul><li><p>attrs &amp; listeners</p></li> <li><p>Provide &amp; Inject</p></li> <li><p>Ref使用</p></li> <li><p>EventBus</p></li> <li><p>Vuex通信</p></li></ul> <iframe src="https://codesandbox.io/embed/github/vuejs/vuejs.org/tree/master/src/v2/examples/vue-20-markdown-editor?codemirror=1&amp;hidedevtools=1&amp;hidenavigation=1&amp;theme=light" title="vue-20-template-compilation" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media; usb" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" style="width:100%;height:500px;border:0;border-radius:4px;overflow:hidden;"></iframe></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">2020-8-23 13:17:17</span></div></footer> <div class="page-nav"><p class="inner"><!----> <span class="next"><a href="/fe/fe/vue-router.html">
         vue-router
       </a>
       →
     </span></p></div> </main></div><div class="global-ui"><!----></div></div>
-    <script src="/fe/assets/js/app.eb6ead6e.js" defer></script><script src="/fe/assets/js/2.656fe59e.js" defer></script><script src="/fe/assets/js/10.0088e856.js" defer></script>
+    <script src="/fe/assets/js/app.aa80d168.js" defer></script><script src="/fe/assets/js/2.656fe59e.js" defer></script><script src="/fe/assets/js/10.f8eee26d.js" defer></script>
   </body>
 </html>
