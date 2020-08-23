@@ -339,6 +339,8 @@ var size16 = makeSizer(16);
 
 ```
 
+可以使用闭包 模拟私有方法，避免污染外部环境
+
 ## ECMAScript 6 ES6
 
 ## JS模块化、Module 语法
