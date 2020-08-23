@@ -322,6 +322,23 @@ MyPromise.resolve = (reason) => {
 
 ## 闭包
 
+闭包可以让你从内部函数访问外部函数作用域。在 JavaScript 中，每当函数被创建，就会在函数生成时生成闭包
+
+可以使用闭包 生成多个方法
+
+``` javascript
+function makeSizer(size) {
+  return function() {
+    document.body.style.fontSize = size + 'px';
+  };
+}
+
+var size12 = makeSizer(12);
+var size14 = makeSizer(14);
+var size16 = makeSizer(16);
+
+```
+
 ## ECMAScript 6 ES6
 
 ## JS模块化、Module 语法

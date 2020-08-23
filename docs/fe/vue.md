@@ -41,14 +41,31 @@ function defineReactive (data, key, val) {
 ### 面向对象写法
 
 ``` javascript
-export default class Dep {
-    constructor () {
-        this.subs = []
+class Dep {
+  // 根据 ts 类型提示，我们可以得出 Dep.target 是一个 Watcher 类型。
+  static target: ?Watcher;
+  // subs 存放搜集到的 Watcher 对象集合
+  subs: Array<Watcher>;
+  constructor() {
+    this.subs = [];
+  }
+  addSub(sub: Watcher) {
+    // 搜集所有使用到这个 data 的 Watcher 对象。
+    this.subs.push(sub);
+  }
+  depend() {
+    if (Dep.target) {
+      // 搜集依赖，最终会调用上面的 addSub 方法
+      Dep.target.addDep(this);
     }
-
-    addSub (sub) {
-
+  }
+  notify() {
+    const subs = this.subs.slice();
+    for (let i = 0, l = subs.length; i < l; i++) {
+      // 调用对应的 Watcher，更新视图
+      subs[i].update();
     }
+  }
 }
 ```
 
