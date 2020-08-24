@@ -16,7 +16,53 @@ Array类型、Function类型、Object类型、Date类型、RegExp类型等都是
 2. 原型链存在的意义就是继承：访问对象属性时，在对象本身找不到，就在原型链上一层一层找。说白了就是一个对象可以访问其他对象的属性。
 3. 继承存在的意义就是属性共享：好处有二：一是代码重用，字面意思；二是可扩展，不同对象可能继承相同的属性，也可以定义只属于自己的属性。
 
-创建方式主要有两种，一种是`new`操作符后跟函数调用，另一种是字面量表示法
+创建对象方式主要有两种，一种是`new`操作符后跟函数调用，另一种是字面量表示法
+
+## 对象继承
+
+## ajax
+
+``` javascript
+var xhr；
+xhr = new XMLHttpRequest()； //创建一个异步对象
+xhr.open("Get"， "/test"， true)；//Get 方式括号中的三个参数分别为：1.发送请求的方式 2. 样请求的页面 3.是否异步
+//xhr.open("post"，"test.ashx"，true)；
+//xhr.setRequestHeader("Content-Type"， "application/x-www-form-urlencoded")； Post
+方式发送数据
+//这个回调函数主要用来检测服务器是否把数据返回给异步对象
+xhr.setRequestHeader("If-Modified-Since"，"0")；//设置浏览器不使用缓存
+xhr.onreadystatechange = function () {
+  if (xhr.readystate == 4) {
+  //readyState 属 性 指 出 了 XMLHttpRequest 对 象 在 发 送 / 接 收 数 据 过 程 中 所 处 的 几 个 状 态 。
+    // XMLHttpRequest 对象会经历 5 种不同的状态。
+    //0：未初始化。对象已经创建，但还未初始化，即还没调用 open 方法；
+    //1：已打开。对象已经创建并初始化，但还未调用 send 方法；
+    //2：已发送。已经调用 send 方法，但该对象正在等待状态码和头的返回；
+    //3：正在接收。已经接收了部分数据，但还不能使用该对象的属性和方法，因为状态和响应头不完整；
+    //4：已加载。所有数据接收完毕
+    if(xhr.status==200){ //检测服务器返回的响应报文的状态码是否为 200
+      alert(xhr.responseText)；//服务器返回的 Response 数据
+      //解析服务器返回的 json 格式的数据
+      var s=xhr.responseText；
+      console.log(s)
+    }
+  }；
+}；
+xhr.send({})；//异步对象发送请求
+//xhr.send("txtName=roger&txtPwd=123")； 以 post 方式发送数据
+```
+
+ajax 中 get 和 post 方式请求数据都是明文的。
+
+get发送数据是写在open()里的url后面，而post写在send()
+
+### get post
+
+第一，在HTTP协议中，GET是安全的，也是幂等的。POST既不是安全的，也不是幂等的。
+
+这里的安全是不论对某资源调用多少次，状态是不会改变的。幂等是无论操作多少次，结果都一样。因此GET返回的内容可以被浏览器，Cache缓存起来。POST你可以理解下字面意思，追加，添加。每次对POST的使用，代码都会认为这个操作会修改对象的的状态，所以缓存服务器是不会对他进行缓存。
+
+第二，会有人理解成GET会有长度限制，POST的数据传输量大
 
 ## 如何判断数据类型
 
