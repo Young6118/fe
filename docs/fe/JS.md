@@ -1086,8 +1086,86 @@ var size16 = makeSizer(16);
 
 模块内部数据和实现是私有的，通过暴露出去接口实现与外部通信。
 
-### 
-
 ### CommonJS
 
 Node 服务端使用
+
+Node应用由模块组成，采用CommonJS模块规范。
+
+根据这个规范，每个文件就是一个模块，有自己的作用域。在一个文件里面定义的变量、函数、类，都是私有的，对其他文件不可见。
+
+CommonJS规范规定，每个模块内部，module变量代表当前模块。这个变量是一个对象，它的exports属性（即module.exports）是对外的接口。加载某个模块，其实是加载该模块的module.exports属性。
+
+require方法用于加载模块。
+
+为了方便，Node为每个模块提供一个exports变量，指向module.exports。这等同在每个模块头部，有一行这样的命令。
+
+var exports = module.exports;
+
+于是我们可以直接在 exports 对象上添加方法，表示对外输出的接口，如同在module.exports上添加一样。注意，不能直接将exports变量指向一个值，因为这样等于切断了exports与module.exports的联系。
+
+ES6模块规范
+
+不同于CommonJS，ES6使用 export 和 import 来导出、导入模块。
+
+``` javascript
+// profile.js
+var firstName = 'Michael';
+var lastName = 'Jackson';
+var year = 1958;
+
+export {firstName, lastName, year};
+```
+
+需要特别注意的是，export命令规定的是对外的接口，必须与模块内部的变量建立一一对应关系。
+
+``` javascript
+// 写法一
+export var m = 1;
+
+// 写法二
+var m = 1;
+export {m};
+
+// 写法三
+var n = 1;
+export {n as m};
+
+export default 命令
+使用export default命令，为模块指定默认输出。
+
+// export-default.js
+export default function () {
+  console.log('foo');
+}
+```
+
+相关链接：
+
+CommonJS规范，http://javascript.ruanyifeng.com/nodejs/module.html
+ES6 Module 的语法，http://es6.ruanyifeng.com/#docs/module
+
+### commonjs与ES6的module区别
+
+两者的模块导入导出语法不同，commonjs是module.exports，exports导出，require导入；ES6则是export导出，import导入。
+
+commonjs是运行时加载模块，ES6是在静态编译期间就确定模块的依赖。
+
+ES6在编译期间会将所有import提升到顶部，commonjs不会提升require。
+
+commonjs导出的是一个值拷贝，会对加载结果进行缓存，一旦内部再修改这个值，则不会同步到外部。ES6是导出的一个引用，内部修改可以同步到外部。
+
+两者的循环导入的实现原理不同，commonjs是当模块遇到循环加载时，返回的是当前已经执行的部分的值，而不是代码全部执行后的值，两者可能会有差异。所以，输入变量的时候，必须非常小心。ES6 模块是动态引用，如果使用import从一个模块加载变量（即import foo from 'foo'），那些变量不会被缓存，而是成为一个指向被加载模块的引用，需要开发者自己保证，真正取值的时候能够取到值。
+
+commonjs中顶层的this指向这个模块本身，而ES6中顶层this指向undefined。
+
+然后就是commonjs中的一些顶层变量在ES6中不再存在：
+
+```
+arguments
+require
+module
+exports
+__filename
+__dirname
+```
