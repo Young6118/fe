@@ -1,5 +1,132 @@
 # Vue
 
+## 基本介绍
+
+以前，我们通过命令语句操作DOM，即使有了jQuery，也是十分复杂。而 Vue 则是声明式，通过描述节点状态，实现与DOM之间的映射，从而实现JS渲染网页。
+
+Vue也是一个渐进式框架，最核心的视图层可以单文件编写，支持组件编写，复杂项目可依次引入路由vue-router、集中状态管理vuex，以及使用构建工具。
+
+Vue 的渲染流程主要是：模板编译，生成渲染函数，渲染函数生成vNode，最终渲染界面。
+
+Vue 是一个MVVM框架，实现了数据双向绑定，即数据发生变化，视图也会跟着变化，而当视图发生变化，数据也会跟着变化。
+
+Vuex中数据是单向流动的，我们在全局中使用，便于数据变化的追踪。
+
+局部数据使用Vue的数据双向绑定，便于操作。
+
+## 数据双向绑定
+
+``` html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>forvue</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="text">
+        {{ text }}
+    </div>
+    <script>
+        function compile(node, vm) {
+            var reg = /\{\{(.*)\}\}/;
+
+            // 节点类型为元素
+            if (node.nodeType === 1) {
+                var attr = node.attributes;
+                // 解析属性
+                for (var i = 0; i < attr.length; i++) {
+                    if (attr[i].nodeName == 'v-model') {
+                        var name = attr[i].nodeValue; // 获取v-model绑定的属性名
+                        node.addEventListener('input', function (e) {
+                            // 给相应的data属性赋值，进而触发属性的set方法
+                            vm[name] = e.target.value;
+                        })
+
+
+                        node.value = vm[name]; // 将data的值赋值给该node
+                        node.removeAttribute('v-model');
+                    }
+                }
+            }
+
+            // 节点类型为text
+            if (node.nodeType === 3) {
+                if (reg.test(node.nodeValue)) {
+                    var name = RegExp.$1; // 获取匹配到的字符串
+                    name = name.trim();
+                    node.nodeValue = vm[name]; // 将data的值赋值给该node
+                }
+            }
+        }
+
+        function nodeToFragment(node, vm) {
+            var flag = document.createDocumentFragment();
+            var child;
+
+            while (child = node.firstChild) {
+                compile(child, vm);
+                flag.appendChild(child); // 将子节点劫持到文档片段中
+            }
+            return flag;
+        }
+
+        function Vue(options) {
+            this.data = options.data;
+            var data = this.data;
+
+            observe(data, this);
+
+            var id = options.el;
+            var dom = nodeToFragment(document.getElementById(id), this);
+            // 编译完成后，将dom返回到app中。
+            document.getElementById(id).appendChild(dom);
+        }
+
+        var vm  = new Vue({
+            el: 'app',
+            data: {
+                text: 'hello world'
+            }
+        });
+
+
+
+        function defineReactive(obj, key, val) {
+            // 响应式的数据绑定
+            Object.defineProperty(obj, key, {
+                get: function () {
+                    return val;
+                },
+                set: function (newVal) {
+                    if (newVal === val) {
+                        return;
+                    } else {
+                        val = newVal;
+                        console.log(val); // 方便看效果
+                    }
+                }
+            });
+        }
+
+        function observe (obj, vm) {
+            Object.keys(obj).forEach(function (key) {
+                defineReactive(vm, key, obj[key]);
+            });
+        }
+
+
+    </script>
+
+</body>
+</html>
+```
+
+通过ES5的Object.defineProperty()方法修改特性值，该方法接收三个参数：属性所在的对象、属性的名字和一个描述符对象。
+
+以上示例的第三个参数是访问器属性，不包含数据值，而是包含一对get和set函数。读取访问器属性时，调用getter；写入访问器属性，调用setter并传入新值。
+
 ## 生命周期
 
 初始化、模板编译、挂载、卸载
@@ -41,31 +168,63 @@ function defineReactive (data, key, val) {
 ### 面向对象写法
 
 ``` javascript
-class Dep {
-  // 根据 ts 类型提示，我们可以得出 Dep.target 是一个 Watcher 类型。
-  static target: ?Watcher;
-  // subs 存放搜集到的 Watcher 对象集合
-  subs: Array<Watcher>;
-  constructor() {
-    this.subs = [];
-  }
-  addSub(sub: Watcher) {
-    // 搜集所有使用到这个 data 的 Watcher 对象。
-    this.subs.push(sub);
-  }
-  depend() {
-    if (Dep.target) {
-      // 搜集依赖，最终会调用上面的 addSub 方法
-      Dep.target.addDep(this);
+function remove (arr, item) {
+    if (arr.length) {
+        const index = arr.indexOf(item)
+        if (index > -1) {
+            return arr.splice(index, 1)
+        }
     }
-  }
-  notify() {
-    const subs = this.subs.slice();
-    for (let i = 0, l = subs.length; i < l; i++) {
-      // 调用对应的 Watcher，更新视图
-      subs[i].update();
+}
+
+export default class Dep {
+    constructor () {
+        this.subs = []
     }
-  }
+
+    addSub (sub) {
+        this.subs.push(sub)
+    }
+
+    removeSub (sub) {
+        remove(this.subs, sub)
+    }
+
+    depend () {
+        if (window.traget) {
+            this.addSub(window.target)
+        }
+    }
+
+    notify () {
+        const subs = this.subs.slice()
+        for (let i = 0, l = subs.length; i < l; i++) {
+            subs[i].update()
+        }
+    }
+}
+```
+
+改造 defineReactive:
+
+``` javascript
+function defineReactive (data, key, val) {
+    let dep = new Dep()
+    Object.defineProperty(data, key, {
+        enumerable: true,
+        configurable: true,
+        get: function () {
+            dep.depend()
+            return val
+        },
+        set: function () {
+            if (val === newVal) {
+                return
+            }
+            val = newVal
+            dep.notify()
+        }
+    })
 }
 ```
 
