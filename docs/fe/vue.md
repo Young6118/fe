@@ -10,9 +10,15 @@ Vue 的渲染流程主要是：模板编译，生成渲染函数，渲染函数�
 
 Vue 是一个MVVM框架，实现了数据双向绑定，即数据发生变化，视图也会跟着变化，而当视图发生变化，数据也会跟着变化。
 
+MVVM (Model View ViewModel->DOM监听和数据绑定)
+
+MVC (Model View Controller)
+
 Vuex中数据是单向流动的，我们在全局中使用，便于数据变化的追踪。
 
 局部数据使用Vue的数据双向绑定，便于操作。
+
+dom 更新是异步的
 
 ## 数据双向绑定
 
@@ -259,7 +265,7 @@ class Watcher {
 
     get () {
         window.target = this
-        let valjue = this.getter.call(this.vm, this.vm)
+        let value = this.getter.call(this.vm, this.vm)
         window.target = undefined
         return value
     }

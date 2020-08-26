@@ -229,8 +229,31 @@ console.log(unsort_array)
 - ES6：Generator 函数
 - ES2017：async await
 
+``` javascript
+new Promise((resolve,reject)=>{
+    console.log(1);
+    setTimeout(()=>{
+        console.log(2);
+    });
+    resolve();
+}).then(()=>{
+    console.log(3);
+}).then(()=>{
+    return new     Promise((resolve,reject)=>{
+   console.log(4);
+ }).then(()=>{
+  console.log(5);
+ });
+}).then(()=>{
+console.log(6);
+});
+console.log(7);
+```
+
 ## Promise
+
 Promise 是一种封装和组合未来值的易于复用机制，实现关注点分离、异步流程控制、异常冒泡、串行/并行控制等
+
 ``` javascript
 const stateArr = ['pending', 'fulfilled', 'rejected']; // 三种状态
 class MyPromise {
